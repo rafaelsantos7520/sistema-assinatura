@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Save } from 'lucide-react'
 import Link from 'next/link'
+import PhoneInput, { isValidPhone } from '@/components/phone-input'
 
 export default function NewSubscriberPage() {
   const [loading, setLoading] = useState(false)
@@ -22,11 +23,10 @@ export default function NewSubscriberPage() {
 
   const validate = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    const whatsappRegex = /^\+?\d{10,15}$/
 
     if (!form.full_name.trim()) return 'Nome completo é obrigatório'
     if (!emailRegex.test(form.contact_email)) return 'E-mail inválido'
-    if (!whatsappRegex.test(form.whatsapp_number.replace(/\s/g, ''))) return 'WhatsApp inválido (ex: +5511999999999)'
+    if (!isValidPhone(form.whatsapp_number)) return 'WhatsApp inválido (ex: +55 11 99999-9999)'
     if (!form.start_date) return 'Data de início é obrigatória'
     if (!form.end_date) return 'Data de término é obrigatória'
     if (form.end_date < form.start_date) return 'Data de término não pode ser anterior à data de início'
@@ -119,16 +119,12 @@ export default function NewSubscriberPage() {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">WhatsApp *</label>
-            <input
-              type="text"
-              value={form.whatsapp_number}
-              onChange={(e) => setForm({ ...form, whatsapp_number: e.target.value })}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-gray-900 placeholder-gray-400"
-              placeholder="+5511999999999"
-            />
-          </div>
+          <PhoneInput
+            value={form.whatsapp_number}
+            onChange={(v) => setForm({ ...form, whatsapp_number: v })}
+            label="WhatsApp *"
+            required
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
