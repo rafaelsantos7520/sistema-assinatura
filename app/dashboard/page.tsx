@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { isSubscriptionActive } from '@/lib/subscription-utils'
 import Link from 'next/link'
-import { Plus, Search, UserCircle, Users, UserCheck, UserX } from 'lucide-react'
+import { Plus, Search, UserCircle, Users, UserCheck, UserX, MessageCircle } from 'lucide-react'
 import ConfirmDialog from '@/components/confirm-dialog'
+import { getWhatsAppLink } from '@/components/phone-input'
 
 interface Subscriber {
   id: string
@@ -279,6 +280,18 @@ export default function DashboardPage() {
                       </td>
                       <td className="px-4 sm:px-6 py-4 text-right">
                         <div className="flex justify-end gap-2">
+                          <a
+                            href={getWhatsAppLink(
+                              subscriber.whatsapp_number,
+                              `Olá ${subscriber.full_name.split(' ')[0]}, gostaria de falar sobre sua assinatura.`
+                            )}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition"
+                            title="Enviar WhatsApp"
+                          >
+                            <MessageCircle size={16} />
+                          </a>
                           <Link
                             href={`/dashboard/subscribers/${subscriber.id}`}
                             className="px-3 py-1.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition no-underline"

@@ -18,6 +18,9 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
 
+    // Pequeno delay para melhor experiência visual
+    await new Promise((resolve) => setTimeout(resolve, 1500))
+
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -45,7 +48,7 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold text-gray-900 mb-1">
             Sistema de Assinaturas
           </h1>
-          <p className="text-gray-500">Faça login para continuar</p>
+          <p className="text-gray-500">Faça login para gerenciar seus assinantes</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
