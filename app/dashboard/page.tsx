@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Plus, Search, UserCircle, Users, UserCheck, UserX, MessageCircle } from 'lucide-react'
 import ConfirmDialog from '@/components/confirm-dialog'
 import { getWhatsAppLink } from '@/components/phone-input'
+import NewSubscriberModal from '@/components/new-subscriber-modal'
 
 interface Subscriber {
   id: string
@@ -38,6 +39,8 @@ export default function DashboardPage() {
     confirmLabel?: string
     confirmVariant?: 'danger' | 'primary'
   }>({ isOpen: false, type: 'confirm', title: '', message: '' })
+
+  const [showNewSubscriberModal, setShowNewSubscriberModal] = useState(false)
 
   useEffect(() => {
     loadSubscribers()
@@ -142,13 +145,13 @@ export default function DashboardPage() {
             Gerencie os assinantes e suas assinaturas
           </p>
         </div>
-        <Link
-          href="/dashboard/subscribers/new"
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2.5 rounded-lg transition no-underline cursor-pointer"
+        <button
+          onClick={() => setShowNewSubscriberModal(true)}
+          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2.5 rounded-lg transition cursor-pointer"
         >
           <Plus size={20} />
           Novo Assinante
-        </Link>
+        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -213,7 +216,7 @@ export default function DashboardPage() {
             <UserCircle size={56} className="mx-auto mb-4 text-gray-300" />
             <p className="text-gray-500 font-medium">Nenhum assinante encontrado</p>
             <p className="text-gray-400 text-sm mt-1">
-              {searchTerm || filterStatus !== 'all' ? 'Tente ajustar os filtros' : 'Clique em "Novo Assinante" para comecar'}
+              {searchTerm || filterStatus !== 'all' ? 'Tente ajustar os filtros' : 'Clique em "Novo Assinante" para começar'}
             </p>
           </div>
         ) : (
@@ -322,6 +325,12 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+
+      <NewSubscriberModal
+        isOpen={showNewSubscriberModal}
+        onClose={() => setShowNewSubscriberModal(false)}
+        onSuccess={loadSubscribers}
+      />
 
       <ConfirmDialog
         isOpen={confirmDialog.isOpen}

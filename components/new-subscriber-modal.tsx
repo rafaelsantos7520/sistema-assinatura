@@ -2,16 +2,19 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
 import { formatDate, addDays } from '@/lib/subscription-utils'
-import { ArrowLeft, Save, CheckCircle2 } from 'lucide-react'
-import Link from 'next/link'
+import { Save } from 'lucide-react'
 import PhoneInput, { isValidPhone } from '@/components/phone-input'
 
-export default function NewSubscriberPage() {
+interface NewSubscriberModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSuccess: () => void
+}
+
+export default function NewSubscriberModal({ isOpen, onClose, onSuccess }: NewSubscriberModalProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const router = useRouter()
   const supabase = createClient()
 
   const [form, setForm] = useState({
@@ -21,13 +24,20 @@ export default function NewSubscriberPage() {
   })
   const [activeOnCreate, setActiveOnCreate] = useState(true)
 
+  if (!isOpen) return null
+
   const validate = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
     if (!form.full_name.trim()) return 'Nome completo é obrigatório'
     if (!emailRegex.test(form.contact_email)) return 'E-mail inválido'
     if (!isValidPhone(form.whatsapp_number)) return 'WhatsApp inválido'
     return null
+  }
+
+  const resetForm = () => {
+    setForm({ full_name: '', contact_email: '', whatsapp_number: '' })
+    setActiveOnCreate(true)
+    setError('')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,8 +78,9 @@ export default function NewSubscriberPage() {
         if (subscriptionError) throw subscriptionError
       }
 
-      router.push('/dashboard')
-      router.refresh()
+      resetForm()
+      onSuccess()
+      onClose()
     } catch (err: any) {
       setError(err.message || 'Erro ao criar assinante')
     } finally {
@@ -78,25 +89,26 @@ export default function NewSubscriberPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <Link
-        href="/dashboard"
-        className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 mb-6 no-underline"
-      >
-        <ArrowLeft size={20} />
-        <span className="text-sm font-medium">Voltar</span>
-      </Link>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 bg-black/50" onClick={onClose} />
+      <div className="relative bg-white rounded-xl shadow-xl max-w-lg w-full mx-4 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">Novo Assinante</h3>
+          <button
+            onClick={onClose}
+            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition cursor-pointer"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          </button>
+        </div>
 
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Novo Assinante</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
 
-      <form onSubmit={handleSubmit} className="max-w-2xl bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8 space-y-6">
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
-
-        <div className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">Nome completo *</label>
             <input
@@ -138,17 +150,26 @@ export default function NewSubscriberPage() {
               <p className="text-xs text-gray-500 mt-0.5">Cria automaticamente uma assinatura válida por 30 dias</p>
             </div>
           </label>
-        </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <Save size={20} />
-          {loading ? 'Salvando...' : 'Cadastrar Assinante'}
-        </button>
-      </form>
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
+            >
+              <Save size={16} />
+              {loading ? 'Salvando...' : 'Cadastrar'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

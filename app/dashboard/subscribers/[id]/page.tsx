@@ -84,9 +84,11 @@ export default function SubscriberProfilePage() {
     end_date: '',
   })
 
-  // Receipt upload state per subscription
-  const [uploadReceiptFor, setUploadReceiptFor] = useState<string | null>(null)
+  // Receipt upload state
+  const [showReceiptUploadModal, setShowReceiptUploadModal] = useState(false)
+  const [uploadReceiptSubscriptionId, setUploadReceiptSubscriptionId] = useState<string | null>(null)
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
+  const [receiptFilePreviewUrl, setReceiptFilePreviewUrl] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const [previewReceiptUrl, setPreviewReceiptUrl] = useState<string | null>(null)
 
@@ -379,7 +381,9 @@ export default function SubscriberProfilePage() {
       })
 
       setReceiptFile(null)
-      setUploadReceiptFor(null)
+      setReceiptFilePreviewUrl(null)
+      setShowReceiptUploadModal(false)
+      setUploadReceiptSubscriptionId(null)
       loadAll()
     } catch (err: any) {
       setConfirmDialog({
@@ -391,6 +395,29 @@ export default function SubscriberProfilePage() {
     } finally {
       setUploading(false)
     }
+  }
+
+  const handleFileSelect = (file: File | null) => {
+    // Limpa preview anterior
+    if (receiptFilePreviewUrl) {
+      URL.revokeObjectURL(receiptFilePreviewUrl)
+    }
+    setReceiptFile(file)
+    if (file) {
+      setReceiptFilePreviewUrl(URL.createObjectURL(file))
+    } else {
+      setReceiptFilePreviewUrl(null)
+    }
+  }
+
+  const handleCloseUploadModal = () => {
+    if (receiptFilePreviewUrl) {
+      URL.revokeObjectURL(receiptFilePreviewUrl)
+    }
+    setReceiptFile(null)
+    setReceiptFilePreviewUrl(null)
+    setShowReceiptUploadModal(false)
+    setUploadReceiptSubscriptionId(null)
   }
 
   const handleDeleteReceipt = (receiptId: string, fileUrl: string) => {
@@ -640,57 +667,19 @@ export default function SubscriberProfilePage() {
 
                       {/* Receipts section */}
                       <div className="mt-4 pt-4 border-t border-gray-100">
-                        {/* Upload receipt button/form */}
-                        {uploadReceiptFor === subscription.id ? (
-                          <div className="bg-gray-50 rounded-lg p-4 mb-3">
-                            <h5 className="text-sm font-semibold text-gray-700 mb-3">
-                              Adicionar comprovante para {new Date(subscription.start_date).toLocaleDateString('pt-BR')} - {new Date(subscription.end_date).toLocaleDateString('pt-BR')}
-                            </h5>
-                            <div className="space-y-3">
-                              <div>
-                                <label className="block text-xs font-medium text-gray-600 mb-1">
-                                  Arquivo *
-                                </label>
-                                <input
-                                  type="file"
-                                  onChange={(e) => setReceiptFile(e.target.files?.[0] || null)}
-                                  accept="image/*,.pdf"
-                                  className="w-full text-sm text-gray-700 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
-                                />
-                              </div>
-                              <div className="flex gap-2">
-                                <button
-                                  onClick={() => handleUploadReceipt(subscription.id, getReferenceMonth(subscription.start_date))}
-                                  disabled={uploading || !receiptFile}
-                                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                                >
-                                  <Upload size={14} />
-                                  {uploading ? 'Enviando...' : 'Enviar'}
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    setUploadReceiptFor(null)
-                                    setReceiptFile(null)
-                                  }}
-                                  className="px-4 py-1.5 border border-gray-300 hover:bg-gray-100 text-gray-700 text-sm font-medium rounded-lg transition cursor-pointer"
-                                >
-                                  Cancelar
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => {
-                              setUploadReceiptFor(subscription.id)
-                              setReceiptFile(null)
-                            }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition cursor-pointer"
-                          >
-                            <Upload size={14} />
-                            Adicionar comprovante
-                          </button>
-                        )}
+                        {/* Upload receipt button */}
+                        <button
+                          onClick={() => {
+                            setUploadReceiptSubscriptionId(subscription.id)
+                            setReceiptFile(null)
+                            setReceiptFilePreviewUrl(null)
+                            setShowReceiptUploadModal(true)
+                          }}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition cursor-pointer"
+                        >
+                          <Upload size={14} />
+                          Adicionar comprovante
+                        </button>
 
                         {/* Receipts list */}
                         {subReceipts.length > 0 && (
@@ -871,6 +860,114 @@ export default function SubscriberProfilePage() {
             />
           </div>
         )}
+      </Modal>
+
+      {/* Receipt Upload Modal */}
+      <Modal
+        isOpen={showReceiptUploadModal}
+        onClose={handleCloseUploadModal}
+        title="Adicionar Comprovante"
+      >
+        {uploadReceiptSubscriptionId && (() => {
+          const uploadSub = subscriber?.subscriptions.find(s => s.id === uploadReceiptSubscriptionId)
+          return (
+            <div className="space-y-5">
+              {uploadSub && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3">
+                  <p className="text-sm text-blue-800">
+                    <span className="font-medium">Assinatura:</span>{' '}
+                    {new Date(uploadSub.start_date).toLocaleDateString('pt-BR')} —{' '}
+                    {new Date(uploadSub.end_date).toLocaleDateString('pt-BR')}
+                  </p>
+                  <p className="text-xs text-blue-600 mt-0.5">
+                    Mês de referência: {getReferenceMonth(uploadSub.start_date)}
+                  </p>
+                </div>
+              )}
+
+              {/* File input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Selecione o arquivo do comprovante *
+                </label>
+                <input
+                  type="file"
+                  onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
+                  accept="image/*,.pdf"
+                  className="w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer file:cursor-pointer border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                />
+              </div>
+
+              {/* Image preview */}
+              {receiptFilePreviewUrl && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Prévia do comprovante
+                  </label>
+                  <div className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center p-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={receiptFilePreviewUrl}
+                      alt="Prévia do comprovante"
+                      className="max-h-48 max-w-full object-contain rounded"
+                    />
+                  </div>
+                  {receiptFile && (
+                    <p className="text-xs text-gray-500 mt-1.5">
+                      {receiptFile.name} ({(receiptFile.size / 1024 / 1024).toFixed(2)} MB)
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* PDF fallback message */}
+              {receiptFile && receiptFile.type === 'application/pdf' && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+                  <p className="text-sm text-amber-700">
+                    <span className="font-medium">Arquivo PDF selecionado.</span>{' '}
+                    A prévia não está disponível para PDF, mas o arquivo será enviado normalmente.
+                  </p>
+                </div>
+              )}
+
+              {/* No file selected message */}
+              {!receiptFile && (
+                <div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-8 text-center">
+                  <Upload size={32} className="mx-auto mb-2 text-gray-300" />
+                  <p className="text-sm text-gray-500">
+                    Nenhum arquivo selecionado
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Selecione uma imagem ou PDF do comprovante
+                  </p>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+                <button
+                  onClick={handleCloseUploadModal}
+                  disabled={uploading}
+                  className="px-4 py-2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => {
+                    if (uploadReceiptSubscriptionId && uploadSub) {
+                      handleUploadReceipt(uploadReceiptSubscriptionId, getReferenceMonth(uploadSub.start_date))
+                    }
+                  }}
+                  disabled={uploading || !receiptFile}
+                  className="inline-flex items-center gap-2 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  <Upload size={16} />
+                  {uploading ? 'Enviando...' : 'Enviar Comprovante'}
+                </button>
+              </div>
+            </div>
+          )
+        })()}
       </Modal>
 
       {/* Confirm / Alert Dialog */}
