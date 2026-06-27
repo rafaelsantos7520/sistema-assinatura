@@ -40,18 +40,24 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-black px-4">
-      {/* Background elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-green-950/40 via-black to-emerald-950/30" />
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-green-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-green-400/5 via-transparent to-transparent" />
+      {/* Large ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-green-500/8 rounded-full blur-[120px]" />
 
-      {/* Grid pattern overlay */}
+      {/* Top-right accent */}
+      <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px]" />
+
+      {/* Bottom-left accent */}
+      <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-green-400/8 rounded-full blur-[100px]" />
+
+      {/* Center-top highlight */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-64 bg-gradient-to-b from-green-500/5 to-transparent" />
+
+      {/* Animated dots pattern */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.04]"
         style={{
-          backgroundImage: `linear-gradient(#22c55e 1px, transparent 1px), linear-gradient(90deg, #22c55e 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
+          backgroundImage: `radial-gradient(circle, #22c55e 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
         }}
       />
 
