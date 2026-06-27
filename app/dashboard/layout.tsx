@@ -13,15 +13,15 @@ export default function DashboardLayout({
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/dashboard" className="flex items-center gap-2 no-underline">
-              <div className="w-10 h-10 flex items-center justify-center">
+            <Link href="/dashboard" className="flex items-center gap-3 no-underline">
+              <div className="w-14 h-14 flex items-center justify-center">
                 <img
                   src="/logo.png"
                   alt="Seconds Delay Esportivo"
-                  className="w-full h-full object-contain rounded-lg"
+                  className="w-full h-full object-contain"
                 />
               </div>
-              <h1 className="text-lg font-bold text-gray-900">
+              <h1 className="text-xl font-bold text-gray-900">
                 Seconds Delay
               </h1>
             </Link>
