@@ -14,11 +14,15 @@ export default function DashboardLayout({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/dashboard" className="flex items-center gap-2 no-underline">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">S</span>
+              <div className="w-10 h-10 flex items-center justify-center">
+                <img
+                  src="/logo.png"
+                  alt="Seconds Delay Esportivo"
+                  className="w-full h-full object-contain rounded-lg"
+                />
               </div>
               <h1 className="text-lg font-bold text-gray-900">
-                Sistema de Assinaturas
+                Seconds Delay
               </h1>
             </Link>
 

@@ -42,13 +42,17 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-800 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 sm:p-10">
         <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mb-4">
-            <LogIn size={28} className="text-white" />
+          <div className="mx-auto w-20 h-20 mb-4">
+            <img
+              src="/logo.png"
+              alt="Seconds Delay Esportivo"
+              className="w-full h-full object-contain"
+            />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1">
-            Sistema de Assinaturas
+            Seconds Delay Esportivo
           </h1>
-          <p className="text-gray-500">Faça login para gerenciar seus assinantes</p>
+          <p className="text-gray-500">Sistema de gerenciamento de assinaturas</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">

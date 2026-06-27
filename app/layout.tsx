@@ -13,8 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sistema de Assinaturas",
-  description: "Gerenciamento de assinaturas compartilhadas",
+  title: "Seconds | Delay Esportivo - Sistema de Assinaturas",
+  description: "Sistema de gerenciamento de assinaturas da Seconds Delay Esportivo",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
