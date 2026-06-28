@@ -38,17 +38,17 @@ export default function ConfirmDialog({
   if (!isOpen) return null
 
   const iconColors = {
-    danger: 'bg-red-100 text-red-600',
-    primary: 'bg-blue-100 text-blue-600',
+    danger: 'bg-danger/10 text-danger',
+    primary: 'bg-accent/10 text-accent',
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="fixed inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
+      <div className="fixed inset-0 bg-black/70" onClick={onClose} />
+      <div className="relative bg-overlay rounded-xl shadow-xl max-w-md w-full mx-4 p-6 border border-border-muted">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition cursor-pointer"
+          className="absolute top-4 right-4 p-1.5 text-text-muted hover:text-text-primary hover:bg-white/[0.04] rounded-lg transition cursor-pointer"
         >
           <X size={18} />
         </button>
@@ -64,8 +64,8 @@ export default function ConfirmDialog({
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
-            <p className="text-sm text-gray-600">{message}</p>
+            <h3 className="text-lg font-semibold text-text-primary mb-1">{title}</h3>
+            <p className="text-sm text-text-muted">{message}</p>
           </div>
         </div>
 
@@ -73,7 +73,7 @@ export default function ConfirmDialog({
           {type === 'alert' ? (
             <button
               onClick={onClose}
-              className="px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-lg transition cursor-pointer"
+              className="px-5 py-2 bg-white/[0.04] hover:bg-white/[0.08] text-text-secondary font-medium rounded-lg transition cursor-pointer"
             >
               OK
             </button>
@@ -81,7 +81,7 @@ export default function ConfirmDialog({
             <>
               <button
                 onClick={onClose}
-                className="px-4 py-2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition cursor-pointer"
+                className="px-4 py-2 border border-border-default hover:bg-white/[0.04] text-text-secondary font-medium rounded-lg transition cursor-pointer"
               >
                 Cancelar
               </button>
@@ -90,11 +90,10 @@ export default function ConfirmDialog({
                   onConfirm?.()
                   onClose()
                 }}
-                className={`px-4 py-2 font-medium rounded-lg transition text-white cursor-pointer ${
-                  confirmVariant === 'danger'
-                    ? 'bg-red-600 hover:bg-red-700'
-                    : 'bg-blue-600 hover:bg-blue-700'
-                }`}
+                className={`px-4 py-2 font-medium rounded-lg transition text-white cursor-pointer ${confirmVariant === 'danger'
+                    ? 'bg-danger hover:bg-danger-hover'
+                    : 'bg-accent hover:bg-accent-hover'
+                  }`}
               >
                 {confirmLabel}
               </button>

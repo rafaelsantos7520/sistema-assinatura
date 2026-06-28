@@ -461,7 +461,7 @@ export default function SubscriberProfilePage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-400">Carregando...</div>
+        <div className="text-text-muted">Carregando...</div>
       </div>
     )
   }
@@ -469,8 +469,8 @@ export default function SubscriberProfilePage() {
   if (!subscriber) {
     return (
       <div className="text-center py-16">
-        <p className="text-gray-500">Assinante nao encontrado</p>
-        <Link href="/dashboard" className="text-blue-600 hover:underline mt-2 inline-block">
+        <p className="text-text-muted">Assinante nao encontrado</p>
+        <Link href="/dashboard" className="text-accent hover:underline mt-2 inline-block">
           Voltar
         </Link>
       </div>
@@ -489,36 +489,36 @@ export default function SubscriberProfilePage() {
     <div className="max-w-7xl mx-auto">
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 mb-4 no-underline"
+        className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-4 no-underline"
       >
         <ArrowLeft size={20} />
         <span className="text-sm font-medium">Voltar</span>
       </Link>
 
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <span className="text-blue-700 font-bold text-lg">
+        <div className="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
+          <span className="text-accent font-bold text-lg">
             {subscriber.full_name.charAt(0).toUpperCase()}
           </span>
         </div>
         <div className="flex-1 min-w-0">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">
+          <h2 className="text-xl sm:text-2xl font-bold text-text-primary truncate">
             {subscriber.full_name}
           </h2>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-sm text-gray-500 truncate">{subscriber.contact_email}</span>
+            <span className="text-sm text-text-muted truncate">{subscriber.contact_email}</span>
             {activeSubscription ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 flex-shrink-0">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent border-accent/20 flex-shrink-0">
                 <CheckCircle2 size={12} />
                 Ativo
               </span>
             ) : latestSubscription ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200 flex-shrink-0">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-danger/10 text-danger border-danger/25 flex-shrink-0">
                 <XCircle size={12} />
                 Vencido
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200 flex-shrink-0">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-white/[0.04] text-text-muted border border-border-muted flex-shrink-0">
                 <Clock size={12} />
                 Inativo
               </span>
@@ -532,7 +532,7 @@ export default function SubscriberProfilePage() {
           )}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition no-underline flex-shrink-0"
+          className="flex items-center gap-2 px-4 py-2.5 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition no-underline flex-shrink-0"
           title="Enviar mensagem no WhatsApp"
         >
           <MessageCircle size={20} />
@@ -541,12 +541,12 @@ export default function SubscriberProfilePage() {
       </div>
 
       {activeSubscription && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <p className="text-blue-800 font-medium">
+        <div className="bg-accent/5 border border-accent/20 rounded-lg p-4 mb-6">
+          <p className="text-accent font-medium">
             Assinatura atual até{' '}
             <strong>{new Date(activeSubscription.end_date).toLocaleDateString('pt-BR')}</strong>
           </p>
-          <p className="text-blue-600 text-sm mt-0.5">
+          <p className="text-accent/70 text-sm mt-0.5">
             {getDaysRemaining(activeSubscription.end_date) === 0
               ? 'Vence hoje'
               : `Restam ${getDaysRemaining(activeSubscription.end_date)} dias`}
@@ -555,7 +555,7 @@ export default function SubscriberProfilePage() {
       )}
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-gray-200 mb-6">
+      <div className="flex gap-1 border-b border-border-default mb-6">
         {tabs.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.key
@@ -564,8 +564,8 @@ export default function SubscriberProfilePage() {
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm font-medium border-b-2 transition cursor-pointer ${isActive
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-accent text-accent'
+                  : 'border-transparent text-text-muted hover:text-text-primary hover:border-white/30'
                 }`}
             >
               <Icon size={18} />
@@ -579,19 +579,19 @@ export default function SubscriberProfilePage() {
       {activeTab === 'subscriptions' && (
         <div className="space-y-4">
           {/* Create subscription buttons */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+          <div className="bg-surface rounded-xl shadow-sm border border-border-muted">
             <div className="p-4 sm:p-6">
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => setShowSubscriptionModal(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition cursor-pointer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition cursor-pointer"
                 >
                   <Plus size={18} />
                   Nova Assinatura
                 </button>
                 <button
                   onClick={handleRenewSubscription}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition cursor-pointer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition cursor-pointer"
                 >
                   <CheckCircle2 size={18} />
                   Ativar/Renovar usuario
@@ -602,10 +602,10 @@ export default function SubscriberProfilePage() {
 
           {/* Subscription list */}
           {subscriber.subscriptions.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 py-12 text-center">
-              <Calendar size={48} className="mx-auto mb-3 text-gray-300" />
-              <p className="text-gray-500 font-medium">Nenhuma assinatura cadastrada</p>
-              <p className="text-gray-400 text-sm mt-1">Clique em "Nova Assinatura" para começar</p>
+            <div className="bg-surface rounded-xl shadow-sm border border-border-muted py-12 text-center">
+              <Calendar size={48} className="mx-auto mb-3 text-text-secondary" />
+              <p className="text-text-muted font-medium">Nenhuma assinatura cadastrada</p>
+              <p className="text-text-muted text-sm mt-1">Clique em "Nova Assinatura" para começar</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -616,34 +616,34 @@ export default function SubscriberProfilePage() {
                 return (
                   <div
                     key={subscription.id}
-                    className={`bg-white rounded-xl shadow-sm border-2 ${isActive ? 'border-emerald-200' : 'border-gray-200'
+                    className={`bg-surface rounded-xl shadow-sm border-2 ${isActive ? 'border-accent/30' : 'border-border-muted'
                       }`}
                   >
                     <div className="p-4 sm:p-5">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium text-gray-900">
+                            <span className="font-medium text-text-primary">
                               {new Date(subscription.start_date).toLocaleDateString('pt-BR')} -{' '}
                               {new Date(subscription.end_date).toLocaleDateString('pt-BR')}
                             </span>
                             {isActive ? (
-                              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent">
                                 Ativa
                               </span>
                             ) : (
-                              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-danger/10 text-danger">
                                 Vencida
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-text-muted">
                             {isActive
                               ? `Restam ${getDaysRemaining(subscription.end_date)} dias`
                               : `Vencida há ${Math.abs(getDaysRemaining(subscription.end_date))} dias`}
                           </p>
                           {subReceipts.length > 0 && (
-                            <p className="text-xs text-blue-600 mt-1">
+                            <p className="text-xs text-accent mt-1">
                               {subReceipts.length} comprovante{subReceipts.length > 1 ? 's' : ''}
                             </p>
                           )}
@@ -652,13 +652,13 @@ export default function SubscriberProfilePage() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => startEditSubscription(subscription)}
-                            className="px-3 py-1.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition cursor-pointer"
+                            className="px-3 py-1.5 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition cursor-pointer"
                           >
                             Editar
                           </button>
                           <button
                             onClick={() => handleDeleteSubscription(subscription.id)}
-                            className="px-3 py-1.5 text-sm font-medium bg-red-600 hover:bg-red-700 text-white rounded-lg transition cursor-pointer"
+                            className="px-3 py-1.5 text-sm font-medium bg-danger hover:bg-danger-hover text-white rounded-lg transition cursor-pointer"
                           >
                             Excluir
                           </button>
@@ -666,7 +666,7 @@ export default function SubscriberProfilePage() {
                       </div>
 
                       {/* Receipts section */}
-                      <div className="mt-4 pt-4 border-t border-gray-100">
+                      <div className="mt-4 pt-4 border-t border-border-muted">
                         {/* Upload receipt button */}
                         <button
                           onClick={() => {
@@ -675,7 +675,7 @@ export default function SubscriberProfilePage() {
                             setReceiptFilePreviewUrl(null)
                             setShowReceiptUploadModal(true)
                           }}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition cursor-pointer"
                         >
                           <Upload size={14} />
                           Adicionar comprovante
@@ -687,17 +687,17 @@ export default function SubscriberProfilePage() {
                             {subReceipts.map((receipt) => (
                               <div
                                 key={receipt.id}
-                                className="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg"
+                                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-2 px-3 bg-base rounded-lg"
                               >
                                 <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
-                                    <Download size={14} className="text-blue-600" />
+                                  <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
+                                    <Download size={14} className="text-accent" />
                                   </div>
                                   <div>
-                                    <p className="text-sm font-medium text-gray-900">
+                                    <p className="text-sm font-medium text-text-primary">
                                       {formatMonth(receipt.reference_month)}
                                     </p>
-                                    <p className="text-xs text-gray-500">
+                                    <p className="text-xs text-text-muted">
                                       {new Date(receipt.uploaded_at).toLocaleDateString('pt-BR')}
                                     </p>
                                   </div>
@@ -706,14 +706,14 @@ export default function SubscriberProfilePage() {
                                   {receipt.signed_url ? (
                                     <button
                                       onClick={() => setPreviewReceiptUrl(receipt.signed_url!)}
-                                      className="px-2.5 py-1 text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition cursor-pointer"
+                                      className="px-2.5 py-1 text-xs font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition cursor-pointer"
                                     >
                                       Visualizar
                                     </button>
                                   ) : null}
                                   <button
                                     onClick={() => handleDeleteReceipt(receipt.id, receipt.file_url)}
-                                    className="px-2.5 py-1 text-xs font-medium bg-red-600 hover:bg-red-700 text-white rounded-lg transition cursor-pointer"
+                                    className="px-2.5 py-1 text-xs font-medium bg-danger hover:bg-danger-hover text-white rounded-lg transition cursor-pointer"
                                   >
                                     Excluir
                                   </button>
@@ -734,44 +734,44 @@ export default function SubscriberProfilePage() {
 
       {/* Tab: Profile */}
       {activeTab === 'profile' && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
+        <div className="bg-surface rounded-xl shadow-sm border border-border-muted p-6 sm:p-8">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <span className="text-blue-700 font-bold text-lg">
+            <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center">
+              <span className="text-accent font-bold text-lg">
                 {subscriber.full_name.charAt(0).toUpperCase()}
               </span>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-text-primary">
                 {subscriber.full_name}
               </h3>
-              <p className="text-sm text-gray-500">Dados pessoais do assinante</p>
+              <p className="text-sm text-text-muted">Dados pessoais do assinante</p>
             </div>
           </div>
 
           <form onSubmit={handleSaveProfile} className="max-w-lg space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Nome completo *</label>
+              <label className="block text-sm font-medium text-text-secondary mb-1.5">Nome completo *</label>
               <div className="relative">
-                <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   type="text"
                   value={profileForm.full_name}
                   onChange={(e) => setProfileForm({ ...profileForm, full_name: e.target.value })}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900"
+                  className="w-full pl-10 pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none text-text-primary"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">E-mail *</label>
+              <label className="block text-sm font-medium text-text-secondary mb-1.5">E-mail *</label>
               <div className="relative">
-                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 <input
                   type="email"
                   value={profileForm.contact_email}
                   onChange={(e) => setProfileForm({ ...profileForm, contact_email: e.target.value })}
-                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900"
+                  className="w-full pl-10 pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none text-text-primary"
                 />
               </div>
             </div>
@@ -787,7 +787,7 @@ export default function SubscriberProfilePage() {
             <button
               type="submit"
               disabled={savingProfile}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full bg-accent hover:bg-accent-hover text-white font-medium py-2.5 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
             >
               <Save size={18} />
               {savingProfile ? 'Salvando...' : 'Salvar Perfil'}
@@ -805,22 +805,22 @@ export default function SubscriberProfilePage() {
         <form onSubmit={handleSaveSubscription} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Data de inicio *</label>
+              <label className="block text-sm font-medium text-text-secondary mb-1.5">Data de inicio *</label>
               <input
                 type="date"
                 value={subscriptionForm.start_date}
                 onChange={(e) => setSubscriptionForm({ ...subscriptionForm, start_date: e.target.value })}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900"
+                className="w-full px-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none text-text-primary"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Data de termino *</label>
+              <label className="block text-sm font-medium text-text-secondary mb-1.5">Data de termino *</label>
               <input
                 type="date"
                 value={subscriptionForm.end_date}
                 onChange={(e) => setSubscriptionForm({ ...subscriptionForm, end_date: e.target.value })}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900"
+                className="w-full px-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none text-text-primary"
                 required
               />
             </div>
@@ -830,13 +830,13 @@ export default function SubscriberProfilePage() {
             <button
               type="button"
               onClick={resetSubscriptionForm}
-              className="px-4 py-2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition cursor-pointer"
+              className="px-4 py-2 border border-border-default hover:bg-white/[0.04] text-text-secondary font-medium rounded-lg transition cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition cursor-pointer"
+              className="px-5 py-2 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition cursor-pointer"
             >
               {editingSubscription ? 'Salvar' : 'Criar'}
             </button>
@@ -873,13 +873,13 @@ export default function SubscriberProfilePage() {
           return (
             <div className="space-y-5">
               {uploadSub && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3">
-                  <p className="text-sm text-blue-800">
+                <div className="bg-accent/5 border border-accent/20 rounded-lg px-4 py-3">
+                  <p className="text-sm text-accent">
                     <span className="font-medium">Assinatura:</span>{' '}
                     {new Date(uploadSub.start_date).toLocaleDateString('pt-BR')} —{' '}
                     {new Date(uploadSub.end_date).toLocaleDateString('pt-BR')}
                   </p>
-                  <p className="text-xs text-blue-600 mt-0.5">
+                  <p className="text-xs text-accent/70 mt-0.5">
                     Mês de referência: {getReferenceMonth(uploadSub.start_date)}
                   </p>
                 </div>
@@ -887,24 +887,24 @@ export default function SubscriberProfilePage() {
 
               {/* File input */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-text-secondary mb-2">
                   Selecione o arquivo do comprovante *
                 </label>
                 <input
                   type="file"
                   onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
                   accept="image/*,.pdf"
-                  className="w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer file:cursor-pointer border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                  className="w-full text-sm text-text-primary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-accent/10 file:text-accent hover:file:bg-accent/20 cursor-pointer file:cursor-pointer bg-base border border-border-default rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-accent outline-none transition"
                 />
               </div>
 
               {/* Image preview */}
               {receiptFilePreviewUrl && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-text-secondary mb-2">
                     Prévia do comprovante
                   </label>
-                  <div className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center p-2">
+                  <div className="border border-border-default rounded-lg overflow-hidden bg-base flex items-center justify-center p-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={receiptFilePreviewUrl}
@@ -913,7 +913,7 @@ export default function SubscriberProfilePage() {
                     />
                   </div>
                   {receiptFile && (
-                    <p className="text-xs text-gray-500 mt-1.5">
+                    <p className="text-xs text-text-muted mt-1.5">
                       {receiptFile.name} ({(receiptFile.size / 1024 / 1024).toFixed(2)} MB)
                     </p>
                   )}
@@ -922,8 +922,8 @@ export default function SubscriberProfilePage() {
 
               {/* PDF fallback message */}
               {receiptFile && receiptFile.type === 'application/pdf' && (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
-                  <p className="text-sm text-amber-700">
+                <div className="bg-warning/10 border border-warning/25 rounded-lg px-4 py-3">
+                  <p className="text-sm text-warning">
                     <span className="font-medium">Arquivo PDF selecionado.</span>{' '}
                     A prévia não está disponível para PDF, mas o arquivo será enviado normalmente.
                   </p>
@@ -932,23 +932,23 @@ export default function SubscriberProfilePage() {
 
               {/* No file selected message */}
               {!receiptFile && (
-                <div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-8 text-center">
-                  <Upload size={32} className="mx-auto mb-2 text-gray-300" />
-                  <p className="text-sm text-gray-500">
+                <div className="bg-base border border-border-muted rounded-lg px-4 py-8 text-center">
+                  <Upload size={32} className="mx-auto mb-2 text-text-muted" />
+                  <p className="text-sm text-text-muted">
                     Nenhum arquivo selecionado
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="text-xs text-text-muted mt-0.5">
                     Selecione uma imagem ou PDF do comprovante
                   </p>
                 </div>
               )}
 
               {/* Actions */}
-              <div className="flex items-center justify-end gap-3 pt-2 border-t border-gray-100">
+              <div className="flex items-center justify-end gap-3 pt-2 border-t border-border-default">
                 <button
                   onClick={handleCloseUploadModal}
                   disabled={uploading}
-                  className="px-4 py-2 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="px-4 py-2 border border-border-default hover:bg-white/[0.04] text-text-secondary font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   Cancelar
                 </button>
@@ -959,7 +959,7 @@ export default function SubscriberProfilePage() {
                     }
                   }}
                   disabled={uploading || !receiptFile}
-                  className="inline-flex items-center gap-2 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="inline-flex items-center gap-2 px-5 py-2 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   <Upload size={16} />
                   {uploading ? 'Enviando...' : 'Enviar Comprovante'}

@@ -59,11 +59,11 @@ export default function PhoneInput({
     return (
         <div>
             {label && (
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">{label}</label>
+                <label className="block text-sm font-medium text-text-secondary mb-1.5">{label}</label>
             )}
             <div className="relative">
                 {withIcon && (
-                    <Phone size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <Phone size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                 )}
                 <input
                     type="tel"
@@ -71,7 +71,7 @@ export default function PhoneInput({
                     onChange={handleChange}
                     placeholder={placeholder}
                     required={required}
-                    className={`w-full ${withIcon ? 'pl-10' : 'px-4'} pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-gray-900 placeholder-gray-400`}
+                    className={`w-full ${withIcon ? 'pl-10' : 'px-4'} pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition text-text-primary placeholder-text-muted`}
                 />
             </div>
         </div>
