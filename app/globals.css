@@ -2,24 +2,35 @@
 
 @theme {
   /* Surfaces */
-  --color-base: #0A0B0D;
-  --color-surface: #141517;
-  --color-overlay: #1C1D20;
+  --color-base: #0D0E10;
+  --color-surface: #1A1D1E;
+  --color-overlay: #252729;
 
-  /* Text */
+  /* Brand - identidade visual Spotify/Dark Neon */
+  --color-brand-primary: #00FF41;
+  --color-brand-primary-hover: #00E639;
+  --color-brand-secondary: #00A859;
+  --color-brand-secondary-hover: #008F4C;
+  --color-on-primary: #0D0E10;
+
+  /* Text - alto contraste para fundos escuros (WCAG 2.1 AA/AAA) */
   --color-text-primary: #F0F0F2;
-  --color-text-secondary: #A1A2A6;
-  --color-text-muted: #6B6C70;
+  --color-text-secondary: #C8C9CD;
+  --color-text-muted: #A5A6AA;
 
   /* Borders */
   --color-border-muted: #2A2B2E;
-  --color-border-default: #38393D;
+  --color-border-default: #3F4044;
 
-  /* Accent green (Spotify-style, legível sobre fundo escuro) */
+  /* Accent green (legível sobre fundo escuro) */
   --color-accent: #1DB954;
   --color-accent-hover: #18A04A;
 
-  /* Semantic */
+  /* Semantic - ações com significado visual claro */
+  --color-success: #00A859;
+  --color-success-hover: #008F4C;
+  --color-info: #3ABEF9;
+  --color-info-hover: #2AA8E0;
   --color-danger: #E5484D;
   --color-danger-hover: #D7383D;
   --color-warning: #F5A623;

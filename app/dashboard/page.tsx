@@ -131,7 +131,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-text-muted">Carregando...</div>
+        <div className="text-text-secondary">Carregando...</div>
       </div>
     )
   }
@@ -141,13 +141,13 @@ export default function DashboardPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-text-primary">Assinantes</h2>
-          <p className="text-sm text-text-muted mt-1">
+          <p className="text-sm text-text-secondary mt-1">
             Gerencie os assinantes e suas assinaturas
           </p>
         </div>
         <button
           onClick={() => setShowNewSubscriberModal(true)}
-          className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-white font-semibold px-4 py-2.5 rounded-lg transition cursor-pointer"
+          className="inline-flex items-center gap-2 bg-brand-primary hover:bg-brand-primary-hover text-on-primary font-semibold px-4 py-2.5 rounded-lg transition cursor-pointer"
         >
           <Plus size={20} />
           Novo Assinante
@@ -156,22 +156,22 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-surface rounded-xl shadow-sm border border-border-muted p-5 flex items-center gap-4">
-          <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
-            <Users size={24} className="text-accent" />
+          <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center">
+            <Users size={24} className="text-brand-primary" />
           </div>
           <div>
             <p className="text-2xl font-bold text-text-primary">{stats.total}</p>
-            <p className="text-sm text-text-muted">Total de assinantes</p>
+            <p className="text-sm text-text-secondary">Total de assinantes</p>
           </div>
         </div>
 
         <div className="bg-surface rounded-xl shadow-sm border border-border-muted p-5 flex items-center gap-4">
-          <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
-            <UserCheck size={24} className="text-accent" />
+          <div className="w-12 h-12 bg-brand-secondary/10 rounded-xl flex items-center justify-center">
+            <UserCheck size={24} className="text-brand-secondary" />
           </div>
           <div>
             <p className="text-2xl font-bold text-text-primary">{stats.active}</p>
-            <p className="text-sm text-text-muted">Assinantes ativos</p>
+            <p className="text-sm text-text-secondary">Assinantes ativos</p>
           </div>
         </div>
 
@@ -181,7 +181,7 @@ export default function DashboardPage() {
           </div>
           <div>
             <p className="text-2xl font-bold text-text-primary">{stats.inactive}</p>
-            <p className="text-sm text-text-muted">Assinantes inativos</p>
+            <p className="text-sm text-text-secondary">Assinantes inativos</p>
           </div>
         </div>
       </div>
@@ -190,19 +190,19 @@ export default function DashboardPage() {
         <div className="p-4 sm:p-6 border-b border-border-muted">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1 relative">
-              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
               <input
                 type="text"
                 placeholder="Buscar por nome ou WhatsApp..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent/30 focus:border-accent outline-none transition text-text-primary placeholder-text-muted"
+                className="w-full pl-10 pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary outline-none transition text-text-primary placeholder-text-secondary"
               />
             </div>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as any)}
-              className="px-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent/30 focus:border-accent outline-none text-text-primary cursor-pointer"
+              className="px-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary outline-none text-text-primary cursor-pointer"
             >
               <option value="all">Todos</option>
               <option value="active">Ativos</option>
@@ -213,9 +213,9 @@ export default function DashboardPage() {
 
         {filtered.length === 0 ? (
           <div className="text-center py-16">
-            <UserCircle size={56} className="mx-auto mb-4 text-text-muted" />
+            <UserCircle size={56} className="mx-auto mb-4 text-text-secondary" />
             <p className="text-text-secondary font-medium">Nenhum assinante encontrado</p>
-            <p className="text-text-muted text-sm mt-1">
+            <p className="text-text-secondary text-sm mt-1">
               {searchTerm || filterStatus !== 'all' ? 'Tente ajustar os filtros' : 'Clique em "Novo Assinante" para começar'}
             </p>
           </div>
@@ -233,24 +233,24 @@ export default function DashboardPage() {
                   <div key={subscriber.id} className="px-4 py-4 sm:px-6 hover:bg-white/[0.02] transition">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <div className="w-10 h-10 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
-                          <span className="text-accent font-semibold text-sm">
+                        <div className="w-10 h-10 bg-brand-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                          <span className="text-brand-primary font-semibold text-sm">
                             {subscriber.full_name.charAt(0).toUpperCase()}
                           </span>
                         </div>
                         <div className="min-w-0">
                           <Link
                             href={`/dashboard/subscribers/${subscriber.id}`}
-                            className="font-medium text-text-primary hover:text-accent transition no-underline block truncate"
+                            className="font-medium text-text-primary hover:text-brand-primary transition no-underline block truncate"
                           >
                             {subscriber.full_name}
                           </Link>
                           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
-                            <span className="text-xs text-text-muted truncate">{subscriber.whatsapp_number}</span>
-                            <span className="text-xs text-text-muted truncate">{subscriber.contact_email}</span>
+                            <span className="text-xs text-text-secondary truncate">{subscriber.whatsapp_number}</span>
+                            <span className="text-xs text-text-secondary truncate">{subscriber.contact_email}</span>
                           </div>
                           {latestSub && (
-                            <p className="text-xs text-text-muted mt-0.5">
+                            <p className="text-xs text-text-secondary mt-0.5">
                               {new Date(latestSub.start_date).toLocaleDateString('pt-BR')} - {new Date(latestSub.end_date).toLocaleDateString('pt-BR')}
                             </p>
                           )}
@@ -258,11 +258,11 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         {activeSub ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent border border-accent/20">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-brand-primary/10 text-brand-primary border border-brand-primary/20">
                             Ativo
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white/[0.06] text-text-muted border border-border-muted">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white/[0.06] text-text-secondary border border-border-muted">
                             Inativo
                           </span>
                         )}
@@ -276,14 +276,14 @@ export default function DashboardPage() {
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="p-1.5 bg-accent hover:bg-accent-hover text-white rounded-lg transition"
+                        className="p-1.5 bg-brand-secondary hover:bg-brand-secondary-hover text-white rounded-lg transition"
                         title="Enviar WhatsApp"
                       >
                         <MessageCircle size={16} />
                       </a>
                       <Link
                         href={`/dashboard/subscribers/${subscriber.id}`}
-                        className="px-3 py-1.5 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition no-underline"
+                        className="px-3 py-1.5 text-sm font-medium bg-brand-secondary hover:bg-brand-secondary-hover text-white rounded-lg transition no-underline"
                       >
                         Ver
                       </Link>
@@ -304,12 +304,12 @@ export default function DashboardPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border-muted">
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">Nome</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">E-mail</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">WhatsApp</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-muted uppercase tracking-wider hidden lg:table-cell">Vigência</th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-muted uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-right text-xs font-semibold text-text-muted uppercase tracking-wider">Ações</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wider">Nome</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wider">E-mail</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wider">WhatsApp</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wider hidden lg:table-cell">Vigência</th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-right text-xs font-semibold text-text-secondary uppercase tracking-wider">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border-muted">
@@ -323,39 +323,39 @@ export default function DashboardPage() {
                       <tr key={subscriber.id} className="hover:bg-white/[0.02] transition">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
-                              <span className="text-accent font-semibold text-sm">
+                            <div className="w-9 h-9 bg-brand-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                              <span className="text-brand-primary font-semibold text-sm">
                                 {subscriber.full_name.charAt(0).toUpperCase()}
                               </span>
                             </div>
                             <Link
                               href={`/dashboard/subscribers/${subscriber.id}`}
-                              className="font-medium text-text-primary hover:text-accent transition no-underline"
+                              className="font-medium text-text-primary hover:text-brand-primary transition no-underline"
                             >
                               {subscriber.full_name}
                             </Link>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-sm text-text-muted">{subscriber.contact_email}</td>
-                        <td className="px-6 py-4 text-sm text-text-muted">{subscriber.whatsapp_number}</td>
-                        <td className="px-6 py-4 text-sm text-text-muted hidden lg:table-cell">
+                        <td className="px-6 py-4 text-sm text-text-secondary">{subscriber.contact_email}</td>
+                        <td className="px-6 py-4 text-sm text-text-secondary">{subscriber.whatsapp_number}</td>
+                        <td className="px-6 py-4 text-sm text-text-secondary hidden lg:table-cell">
                           {latestSub ? (
                             <>
                               {new Date(latestSub.start_date).toLocaleDateString('pt-BR')}
-                              <span className="text-text-muted mx-1">-</span>
+                              <span className="text-text-secondary mx-1">-</span>
                               {new Date(latestSub.end_date).toLocaleDateString('pt-BR')}
                             </>
                           ) : (
-                            <span className="text-text-muted">-</span>
+                            <span className="text-text-secondary">-</span>
                           )}
                         </td>
                         <td className="px-6 py-4">
                           {activeSub ? (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent border border-accent/20">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-primary/10 text-brand-primary border border-brand-primary/20">
                               Ativo
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/[0.06] text-text-muted border border-border-muted">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/[0.06] text-text-secondary border border-border-muted">
                               Inativo
                             </span>
                           )}
@@ -369,14 +369,14 @@ export default function DashboardPage() {
                               )}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-1.5 bg-accent hover:bg-accent-hover text-white rounded-lg transition"
+                              className="p-1.5 bg-brand-secondary hover:bg-brand-secondary-hover text-white rounded-lg transition"
                               title="Enviar WhatsApp"
                             >
                               <MessageCircle size={16} />
                             </a>
                             <Link
                               href={`/dashboard/subscribers/${subscriber.id}`}
-                              className="px-3 py-1.5 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition no-underline"
+                              className="px-3 py-1.5 text-sm font-medium bg-brand-secondary hover:bg-brand-secondary-hover text-white rounded-lg transition no-underline"
                             >
                               Ver
                             </Link>
@@ -399,7 +399,7 @@ export default function DashboardPage() {
 
         {filtered.length > 0 && (
           <div className="px-4 sm:px-6 py-3 border-t border-border-muted bg-white/[0.02] rounded-b-xl">
-            <p className="text-sm text-text-muted">
+            <p className="text-sm text-text-secondary">
               Exibindo {filtered.length} de {subscribers.length} assinante{subscribers.length !== 1 ? 's' : ''}
             </p>
           </div>

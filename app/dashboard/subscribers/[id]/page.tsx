@@ -3,7 +3,12 @@
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useParams } from 'next/navigation'
-import { isSubscriptionActive, getDaysRemaining, addDays, formatDate } from '@/lib/subscription-utils'
+import {
+  isSubscriptionActive,
+  getDaysRemaining,
+  addDays,
+  formatDate,
+} from '@/lib/subscription-utils'
 import {
   ArrowLeft,
   Calendar,
@@ -12,46 +17,22 @@ import {
   XCircle,
   Clock,
   User,
-  Mail,
-  Phone,
-  Save,
-  Upload,
-  Download,
-  X,
   MessageCircle,
 } from 'lucide-react'
 import Link from 'next/link'
 import Modal from '@/components/modal'
 import ConfirmDialog from '@/components/confirm-dialog'
-import PhoneInput, { isValidPhone, getWhatsAppLink } from '@/components/phone-input'
+import { getWhatsAppLink } from '@/components/phone-input'
+import { Subscriber, Subscription, Receipt, Tab, ConfirmDialogState } from './components/types'
+import SubscriptionModal from './components/subscription-modal'
+import ReceiptUploadModal from './components/receipt-upload-modal'
+import SubscriptionCard from './components/subscription-card'
+import ProfileForm from './components/profile-form'
 
-interface Subscription {
-  id: string
-  subscriber_id: string
-  start_date: string
-  end_date: string
-  created_at: string
-}
-
-interface Receipt {
-  id: string
-  subscription_id: string
-  reference_month: string
-  file_url: string
-  uploaded_at: string
-  signed_url?: string
-}
-
-interface Subscriber {
-  id: string
-  full_name: string
-  contact_email: string
-  whatsapp_number: string
-  created_at: string
-  subscriptions: Subscription[]
-}
-
-type Tab = 'subscriptions' | 'profile'
+const tabs: { key: Tab; label: string; icon: typeof User }[] = [
+  { key: 'subscriptions', label: 'Assinaturas', icon: Calendar },
+  { key: 'profile', label: 'Perfil', icon: User },
+]
 
 export default function SubscriberProfilePage() {
   const [subscriber, setSubscriber] = useState<Subscriber | null>(null)
@@ -63,15 +44,12 @@ export default function SubscriberProfilePage() {
   const [showSubscriptionModal, setShowSubscriptionModal] = useState(false)
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null)
 
-  const [confirmDialog, setConfirmDialog] = useState<{
-    isOpen: boolean
-    type: 'confirm' | 'alert'
-    title: string
-    message: string
-    onConfirm?: () => void
-    confirmLabel?: string
-    confirmVariant?: 'danger' | 'primary'
-  }>({ isOpen: false, type: 'confirm', title: '', message: '' })
+  const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState>({
+    isOpen: false,
+    type: 'confirm',
+    title: '',
+    message: '',
+  })
 
   const [profileForm, setProfileForm] = useState({
     full_name: '',
@@ -84,7 +62,6 @@ export default function SubscriberProfilePage() {
     end_date: '',
   })
 
-  // Receipt upload state
   const [showReceiptUploadModal, setShowReceiptUploadModal] = useState(false)
   const [uploadReceiptSubscriptionId, setUploadReceiptSubscriptionId] = useState<string | null>(null)
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
@@ -101,7 +78,6 @@ export default function SubscriberProfilePage() {
 
   const loadAll = async () => {
     try {
-      // Load subscriber + subscriptions
       const { data: subData, error: subError } = await supabase
         .from('subscribers')
         .select('*, subscriptions(*)')
@@ -122,7 +98,6 @@ export default function SubscriberProfilePage() {
         whatsapp_number: subData.whatsapp_number,
       })
 
-      // Load all receipts for this subscriber
       const { data: recData, error: recError } = await supabase
         .from('payment_receipts')
         .select('*')
@@ -131,9 +106,8 @@ export default function SubscriberProfilePage() {
 
       if (recError) throw recError
 
-      // Generate signed URLs for receipts
       const receiptsWithUrls = await Promise.all(
-        (recData || []).map(async (receipt: any) => {
+        (recData || []).map(async (receipt: Receipt) => {
           try {
             const filePath = receipt.file_url
             if (filePath.startsWith('http')) {
@@ -167,7 +141,8 @@ export default function SubscriberProfilePage() {
 
   const validateSubscription = () => {
     if (!subscriptionForm.start_date || !subscriptionForm.end_date) return 'Preencha as datas'
-    if (subscriptionForm.end_date < subscriptionForm.start_date) return 'Termino nao pode ser anterior ao inicio'
+    if (subscriptionForm.end_date < subscriptionForm.start_date)
+      return 'Término não pode ser anterior ao início'
     return null
   }
 
@@ -196,13 +171,11 @@ export default function SubscriberProfilePage() {
           .eq('id', editingSubscription.id)
         if (error) throw error
       } else {
-        const { error } = await supabase
-          .from('subscriptions')
-          .insert({
-            subscriber_id: id,
-            start_date: subscriptionForm.start_date,
-            end_date: subscriptionForm.end_date,
-          })
+        const { error } = await supabase.from('subscriptions').insert({
+          subscriber_id: id,
+          start_date: subscriptionForm.start_date,
+          end_date: subscriptionForm.end_date,
+        })
         if (error) throw error
       }
 
@@ -232,7 +205,7 @@ export default function SubscriberProfilePage() {
       isOpen: true,
       type: 'confirm',
       title: 'Renovar assinatura',
-      message: 'Ativar/renovar usuario com assinatura de 30 dias?',
+      message: 'Ativar/renovar usuário com assinatura de 30 dias?',
       confirmLabel: 'Renovar',
       confirmVariant: 'primary',
       onConfirm: async () => {
@@ -291,7 +264,6 @@ export default function SubscriberProfilePage() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!profileForm.full_name.trim()) return 'Nome completo é obrigatório'
     if (!emailRegex.test(profileForm.contact_email)) return 'E-mail inválido'
-    if (!isValidPhone(profileForm.whatsapp_number)) return 'WhatsApp inválido'
     return null
   }
 
@@ -343,13 +315,6 @@ export default function SubscriberProfilePage() {
 
   // --- Receipt CRUD ---
 
-  const getReferenceMonth = (dateStr: string) => {
-    const d = new Date(dateStr)
-    const year = d.getFullYear()
-    const month = String(d.getMonth() + 1).padStart(2, '0')
-    return `${year}-${month}`
-  }
-
   const handleUploadReceipt = async (subscriptionId: string, referenceMonth: string) => {
     if (!receiptFile) {
       setConfirmDialog({
@@ -380,10 +345,7 @@ export default function SubscriberProfilePage() {
         file_url: fileName,
       })
 
-      setReceiptFile(null)
-      setReceiptFilePreviewUrl(null)
-      setShowReceiptUploadModal(false)
-      setUploadReceiptSubscriptionId(null)
+      handleCloseUploadModal()
       loadAll()
     } catch (err: any) {
       setConfirmDialog({
@@ -398,7 +360,6 @@ export default function SubscriberProfilePage() {
   }
 
   const handleFileSelect = (file: File | null) => {
-    // Limpa preview anterior
     if (receiptFilePreviewUrl) {
       URL.revokeObjectURL(receiptFilePreviewUrl)
     }
@@ -452,16 +413,10 @@ export default function SubscriberProfilePage() {
     return receipts.filter((r) => r.subscription_id === subscriptionId)
   }
 
-  const formatMonth = (month: string) => {
-    const [year, monthNum] = month.split('-')
-    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
-    return `${months[parseInt(monthNum) - 1]}/${year}`
-  }
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-text-muted">Carregando...</div>
+        <div className="text-text-secondary">Carregando...</div>
       </div>
     )
   }
@@ -469,35 +424,35 @@ export default function SubscriberProfilePage() {
   if (!subscriber) {
     return (
       <div className="text-center py-16">
-        <p className="text-text-muted">Assinante nao encontrado</p>
-        <Link href="/dashboard" className="text-accent hover:underline mt-2 inline-block">
+        <p className="text-text-secondary">Assinante não encontrado</p>
+        <Link
+          href="/dashboard"
+          className="text-brand-primary hover:underline mt-2 inline-block"
+        >
           Voltar
         </Link>
       </div>
     )
   }
 
-  const activeSubscription = subscriber.subscriptions.find((s) => isSubscriptionActive(s))
+  const activeSubscription = subscriber.subscriptions.find((s) =>
+    isSubscriptionActive(s)
+  )
   const latestSubscription = subscriber.subscriptions[0]
-
-  const tabs: { key: Tab; label: string; icon: any }[] = [
-    { key: 'subscriptions', label: 'Assinaturas', icon: Calendar },
-    { key: 'profile', label: 'Perfil', icon: User },
-  ]
 
   return (
     <div className="max-w-7xl mx-auto">
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-4 no-underline"
+        className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary mb-4 no-underline"
       >
         <ArrowLeft size={20} />
         <span className="text-sm font-medium">Voltar</span>
       </Link>
 
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-14 h-14 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0">
-          <span className="text-accent font-bold text-lg">
+        <div className="w-14 h-14 bg-brand-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+          <span className="text-brand-primary font-bold text-lg">
             {subscriber.full_name.charAt(0).toUpperCase()}
           </span>
         </div>
@@ -506,9 +461,11 @@ export default function SubscriberProfilePage() {
             {subscriber.full_name}
           </h2>
           <div className="flex items-center gap-2 mt-0.5">
-            <span className="text-sm text-text-muted truncate">{subscriber.contact_email}</span>
+            <span className="text-sm text-text-secondary truncate">
+              {subscriber.contact_email}
+            </span>
             {activeSubscription ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent border-accent/20 flex-shrink-0">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-brand-primary/10 text-brand-primary border-brand-primary/20 flex-shrink-0">
                 <CheckCircle2 size={12} />
                 Ativo
               </span>
@@ -518,7 +475,7 @@ export default function SubscriberProfilePage() {
                 Vencido
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-white/[0.04] text-text-muted border border-border-muted flex-shrink-0">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-white/[0.04] text-text-secondary border border-border-muted flex-shrink-0">
                 <Clock size={12} />
                 Inativo
               </span>
@@ -532,7 +489,7 @@ export default function SubscriberProfilePage() {
           )}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2.5 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition no-underline flex-shrink-0"
+          className="flex items-center gap-2 px-4 py-2.5 bg-brand-secondary hover:bg-brand-secondary-hover text-white font-medium rounded-lg transition no-underline flex-shrink-0"
           title="Enviar mensagem no WhatsApp"
         >
           <MessageCircle size={20} />
@@ -541,12 +498,12 @@ export default function SubscriberProfilePage() {
       </div>
 
       {activeSubscription && (
-        <div className="bg-accent/5 border border-accent/20 rounded-lg p-4 mb-6">
-          <p className="text-accent font-medium">
+        <div className="bg-brand-primary/5 border border-brand-primary/20 rounded-lg p-4 mb-6">
+          <p className="text-brand-primary font-medium">
             Assinatura atual até{' '}
             <strong>{new Date(activeSubscription.end_date).toLocaleDateString('pt-BR')}</strong>
           </p>
-          <p className="text-accent/70 text-sm mt-0.5">
+          <p className="text-text-secondary text-sm mt-0.5">
             {getDaysRemaining(activeSubscription.end_date) === 0
               ? 'Vence hoje'
               : `Restam ${getDaysRemaining(activeSubscription.end_date)} dias`}
@@ -564,8 +521,8 @@ export default function SubscriberProfilePage() {
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={`flex items-center gap-2 px-4 sm:px-6 py-3 text-sm font-medium border-b-2 transition cursor-pointer ${isActive
-                  ? 'border-accent text-accent'
-                  : 'border-transparent text-text-muted hover:text-text-primary hover:border-white/30'
+                ? 'border-brand-primary text-brand-primary'
+                : 'border-transparent text-text-secondary hover:text-text-primary hover:border-white/30'
                 }`}
             >
               <Icon size={18} />
@@ -584,17 +541,17 @@ export default function SubscriberProfilePage() {
               <div className="flex flex-wrap gap-3">
                 <button
                   onClick={() => setShowSubscriptionModal(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition cursor-pointer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-primary hover:bg-brand-primary-hover text-on-primary font-medium rounded-lg transition cursor-pointer"
                 >
                   <Plus size={18} />
                   Nova Assinatura
                 </button>
                 <button
                   onClick={handleRenewSubscription}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition cursor-pointer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-secondary hover:bg-brand-secondary-hover text-white font-medium rounded-lg transition cursor-pointer"
                 >
                   <CheckCircle2 size={18} />
-                  Ativar/Renovar usuario
+                  Ativar/Renovar usuário
                 </button>
               </div>
             </div>
@@ -604,129 +561,32 @@ export default function SubscriberProfilePage() {
           {subscriber.subscriptions.length === 0 ? (
             <div className="bg-surface rounded-xl shadow-sm border border-border-muted py-12 text-center">
               <Calendar size={48} className="mx-auto mb-3 text-text-secondary" />
-              <p className="text-text-muted font-medium">Nenhuma assinatura cadastrada</p>
-              <p className="text-text-muted text-sm mt-1">Clique em "Nova Assinatura" para começar</p>
+              <p className="text-text-secondary font-medium">
+                Nenhuma assinatura cadastrada
+              </p>
+              <p className="text-text-secondary text-sm mt-1">
+                Clique em &quot;Nova Assinatura&quot; para começar
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
-              {subscriber.subscriptions.map((subscription) => {
-                const isActive = isSubscriptionActive(subscription)
-                const subReceipts = getReceiptsForSubscription(subscription.id)
-
-                return (
-                  <div
-                    key={subscription.id}
-                    className={`bg-surface rounded-xl shadow-sm border-2 ${isActive ? 'border-accent/30' : 'border-border-muted'
-                      }`}
-                  >
-                    <div className="p-4 sm:p-5">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium text-text-primary">
-                              {new Date(subscription.start_date).toLocaleDateString('pt-BR')} -{' '}
-                              {new Date(subscription.end_date).toLocaleDateString('pt-BR')}
-                            </span>
-                            {isActive ? (
-                              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent">
-                                Ativa
-                              </span>
-                            ) : (
-                              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-danger/10 text-danger">
-                                Vencida
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm text-text-muted">
-                            {isActive
-                              ? `Restam ${getDaysRemaining(subscription.end_date)} dias`
-                              : `Vencida há ${Math.abs(getDaysRemaining(subscription.end_date))} dias`}
-                          </p>
-                          {subReceipts.length > 0 && (
-                            <p className="text-xs text-accent mt-1">
-                              {subReceipts.length} comprovante{subReceipts.length > 1 ? 's' : ''}
-                            </p>
-                          )}
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => startEditSubscription(subscription)}
-                            className="px-3 py-1.5 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition cursor-pointer"
-                          >
-                            Editar
-                          </button>
-                          <button
-                            onClick={() => handleDeleteSubscription(subscription.id)}
-                            className="px-3 py-1.5 text-sm font-medium bg-danger hover:bg-danger-hover text-white rounded-lg transition cursor-pointer"
-                          >
-                            Excluir
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Receipts section */}
-                      <div className="mt-4 pt-4 border-t border-border-muted">
-                        {/* Upload receipt button */}
-                        <button
-                          onClick={() => {
-                            setUploadReceiptSubscriptionId(subscription.id)
-                            setReceiptFile(null)
-                            setReceiptFilePreviewUrl(null)
-                            setShowReceiptUploadModal(true)
-                          }}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition cursor-pointer"
-                        >
-                          <Upload size={14} />
-                          Adicionar comprovante
-                        </button>
-
-                        {/* Receipts list */}
-                        {subReceipts.length > 0 && (
-                          <div className="mt-3 space-y-2">
-                            {subReceipts.map((receipt) => (
-                              <div
-                                key={receipt.id}
-                                className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-2 px-3 bg-base rounded-lg"
-                              >
-                                <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
-                                    <Download size={14} className="text-accent" />
-                                  </div>
-                                  <div>
-                                    <p className="text-sm font-medium text-text-primary">
-                                      {formatMonth(receipt.reference_month)}
-                                    </p>
-                                    <p className="text-xs text-text-muted">
-                                      {new Date(receipt.uploaded_at).toLocaleDateString('pt-BR')}
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  {receipt.signed_url ? (
-                                    <button
-                                      onClick={() => setPreviewReceiptUrl(receipt.signed_url!)}
-                                      className="px-2.5 py-1 text-xs font-medium bg-accent hover:bg-accent-hover text-white rounded-lg transition cursor-pointer"
-                                    >
-                                      Visualizar
-                                    </button>
-                                  ) : null}
-                                  <button
-                                    onClick={() => handleDeleteReceipt(receipt.id, receipt.file_url)}
-                                    className="px-2.5 py-1 text-xs font-medium bg-danger hover:bg-danger-hover text-white rounded-lg transition cursor-pointer"
-                                  >
-                                    Excluir
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
+              {subscriber.subscriptions.map((subscription) => (
+                <SubscriptionCard
+                  key={subscription.id}
+                  subscription={subscription}
+                  receipts={getReceiptsForSubscription(subscription.id)}
+                  onEdit={startEditSubscription}
+                  onDelete={handleDeleteSubscription}
+                  onUploadClick={(subscriptionId) => {
+                    setUploadReceiptSubscriptionId(subscriptionId)
+                    setReceiptFile(null)
+                    setReceiptFilePreviewUrl(null)
+                    setShowReceiptUploadModal(true)
+                  }}
+                  onPreview={setPreviewReceiptUrl}
+                  onDeleteReceipt={handleDeleteReceipt}
+                />
+              ))}
             </div>
           )}
         </div>
@@ -734,115 +594,23 @@ export default function SubscriberProfilePage() {
 
       {/* Tab: Profile */}
       {activeTab === 'profile' && (
-        <div className="bg-surface rounded-xl shadow-sm border border-border-muted p-6 sm:p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center">
-              <span className="text-accent font-bold text-lg">
-                {subscriber.full_name.charAt(0).toUpperCase()}
-              </span>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-text-primary">
-                {subscriber.full_name}
-              </h3>
-              <p className="text-sm text-text-muted">Dados pessoais do assinante</p>
-            </div>
-          </div>
-
-          <form onSubmit={handleSaveProfile} className="max-w-lg space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-text-secondary mb-1.5">Nome completo *</label>
-              <div className="relative">
-                <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-                <input
-                  type="text"
-                  value={profileForm.full_name}
-                  onChange={(e) => setProfileForm({ ...profileForm, full_name: e.target.value })}
-                  className="w-full pl-10 pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none text-text-primary"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-text-secondary mb-1.5">E-mail *</label>
-              <div className="relative">
-                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-                <input
-                  type="email"
-                  value={profileForm.contact_email}
-                  onChange={(e) => setProfileForm({ ...profileForm, contact_email: e.target.value })}
-                  className="w-full pl-10 pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none text-text-primary"
-                />
-              </div>
-            </div>
-
-            <PhoneInput
-              value={profileForm.whatsapp_number}
-              onChange={(v) => setProfileForm({ ...profileForm, whatsapp_number: v })}
-              label="WhatsApp *"
-              withIcon
-              required
-            />
-
-            <button
-              type="submit"
-              disabled={savingProfile}
-              className="w-full bg-accent hover:bg-accent-hover text-white font-medium py-2.5 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Save size={18} />
-              {savingProfile ? 'Salvando...' : 'Salvar Perfil'}
-            </button>
-          </form>
-        </div>
+        <ProfileForm
+          subscriber={subscriber}
+          form={profileForm}
+          setForm={setProfileForm}
+          saving={savingProfile}
+          onSubmit={handleSaveProfile}
+        />
       )}
 
-      {/* Subscription Modal */}
-      <Modal
+      <SubscriptionModal
         isOpen={showSubscriptionModal}
         onClose={resetSubscriptionForm}
-        title={editingSubscription ? 'Editar Assinatura' : 'Nova Assinatura'}
-      >
-        <form onSubmit={handleSaveSubscription} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-text-secondary mb-1.5">Data de inicio *</label>
-              <input
-                type="date"
-                value={subscriptionForm.start_date}
-                onChange={(e) => setSubscriptionForm({ ...subscriptionForm, start_date: e.target.value })}
-                className="w-full px-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none text-text-primary"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-text-secondary mb-1.5">Data de termino *</label>
-              <input
-                type="date"
-                value={subscriptionForm.end_date}
-                onChange={(e) => setSubscriptionForm({ ...subscriptionForm, end_date: e.target.value })}
-                className="w-full px-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none text-text-primary"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={resetSubscriptionForm}
-              className="px-4 py-2 border border-border-default hover:bg-white/[0.04] text-text-secondary font-medium rounded-lg transition cursor-pointer"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className="px-5 py-2 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition cursor-pointer"
-            >
-              {editingSubscription ? 'Salvar' : 'Criar'}
-            </button>
-          </div>
-        </form>
-      </Modal>
+        editingSubscription={editingSubscription}
+        form={subscriptionForm}
+        setForm={setSubscriptionForm}
+        onSubmit={handleSaveSubscription}
+      />
 
       {/* Receipt Preview Modal */}
       <Modal
@@ -862,118 +630,21 @@ export default function SubscriberProfilePage() {
         )}
       </Modal>
 
-      {/* Receipt Upload Modal */}
-      <Modal
+      <ReceiptUploadModal
         isOpen={showReceiptUploadModal}
         onClose={handleCloseUploadModal}
-        title="Adicionar Comprovante"
-      >
-        {uploadReceiptSubscriptionId && (() => {
-          const uploadSub = subscriber?.subscriptions.find(s => s.id === uploadReceiptSubscriptionId)
-          return (
-            <div className="space-y-5">
-              {uploadSub && (
-                <div className="bg-accent/5 border border-accent/20 rounded-lg px-4 py-3">
-                  <p className="text-sm text-accent">
-                    <span className="font-medium">Assinatura:</span>{' '}
-                    {new Date(uploadSub.start_date).toLocaleDateString('pt-BR')} —{' '}
-                    {new Date(uploadSub.end_date).toLocaleDateString('pt-BR')}
-                  </p>
-                  <p className="text-xs text-accent/70 mt-0.5">
-                    Mês de referência: {getReferenceMonth(uploadSub.start_date)}
-                  </p>
-                </div>
-              )}
+        subscriptionId={uploadReceiptSubscriptionId}
+        subscriptions={subscriber.subscriptions}
+        receiptFile={receiptFile}
+        previewUrl={receiptFilePreviewUrl}
+        uploading={uploading}
+        onFileSelect={handleFileSelect}
+        onUpload={handleUploadReceipt}
+      />
 
-              {/* File input */}
-              <div>
-                <label className="block text-sm font-medium text-text-secondary mb-2">
-                  Selecione o arquivo do comprovante *
-                </label>
-                <input
-                  type="file"
-                  onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
-                  accept="image/*,.pdf"
-                  className="w-full text-sm text-text-primary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-accent/10 file:text-accent hover:file:bg-accent/20 cursor-pointer file:cursor-pointer bg-base border border-border-default rounded-lg px-3 py-2 focus:ring-2 focus:ring-accent focus:border-accent outline-none transition"
-                />
-              </div>
-
-              {/* Image preview */}
-              {receiptFilePreviewUrl && (
-                <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">
-                    Prévia do comprovante
-                  </label>
-                  <div className="border border-border-default rounded-lg overflow-hidden bg-base flex items-center justify-center p-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={receiptFilePreviewUrl}
-                      alt="Prévia do comprovante"
-                      className="max-h-48 max-w-full object-contain rounded"
-                    />
-                  </div>
-                  {receiptFile && (
-                    <p className="text-xs text-text-muted mt-1.5">
-                      {receiptFile.name} ({(receiptFile.size / 1024 / 1024).toFixed(2)} MB)
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {/* PDF fallback message */}
-              {receiptFile && receiptFile.type === 'application/pdf' && (
-                <div className="bg-warning/10 border border-warning/25 rounded-lg px-4 py-3">
-                  <p className="text-sm text-warning">
-                    <span className="font-medium">Arquivo PDF selecionado.</span>{' '}
-                    A prévia não está disponível para PDF, mas o arquivo será enviado normalmente.
-                  </p>
-                </div>
-              )}
-
-              {/* No file selected message */}
-              {!receiptFile && (
-                <div className="bg-base border border-border-muted rounded-lg px-4 py-8 text-center">
-                  <Upload size={32} className="mx-auto mb-2 text-text-muted" />
-                  <p className="text-sm text-text-muted">
-                    Nenhum arquivo selecionado
-                  </p>
-                  <p className="text-xs text-text-muted mt-0.5">
-                    Selecione uma imagem ou PDF do comprovante
-                  </p>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex items-center justify-end gap-3 pt-2 border-t border-border-default">
-                <button
-                  onClick={handleCloseUploadModal}
-                  disabled={uploading}
-                  className="px-4 py-2 border border-border-default hover:bg-white/[0.04] text-text-secondary font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={() => {
-                    if (uploadReceiptSubscriptionId && uploadSub) {
-                      handleUploadReceipt(uploadReceiptSubscriptionId, getReferenceMonth(uploadSub.start_date))
-                    }
-                  }}
-                  disabled={uploading || !receiptFile}
-                  className="inline-flex items-center gap-2 px-5 py-2 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  <Upload size={16} />
-                  {uploading ? 'Enviando...' : 'Enviar Comprovante'}
-                </button>
-              </div>
-            </div>
-          )
-        })()}
-      </Modal>
-
-      {/* Confirm / Alert Dialog */}
       <ConfirmDialog
         isOpen={confirmDialog.isOpen}
-        onClose={() => setConfirmDialog(prev => ({ ...prev, isOpen: false }))}
+        onClose={() => setConfirmDialog((prev) => ({ ...prev, isOpen: false }))}
         onConfirm={confirmDialog.onConfirm}
         title={confirmDialog.title}
         message={confirmDialog.message}

@@ -39,7 +39,7 @@ export default function ConfirmDialog({
 
   const iconColors = {
     danger: 'bg-danger/10 text-danger',
-    primary: 'bg-accent/10 text-accent',
+    primary: 'bg-brand-primary/10 text-brand-primary',
   }
 
   return (
@@ -48,7 +48,7 @@ export default function ConfirmDialog({
       <div className="relative bg-overlay rounded-xl shadow-xl max-w-md w-full mx-4 p-6 border border-border-muted">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 text-text-muted hover:text-text-primary hover:bg-white/[0.04] rounded-lg transition cursor-pointer"
+          className="absolute top-4 right-4 p-1.5 text-text-secondary hover:text-text-primary hover:bg-white/[0.04] rounded-lg transition cursor-pointer"
         >
           <X size={18} />
         </button>
@@ -65,7 +65,7 @@ export default function ConfirmDialog({
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold text-text-primary mb-1">{title}</h3>
-            <p className="text-sm text-text-muted">{message}</p>
+            <p className="text-sm text-text-secondary">{message}</p>
           </div>
         </div>
 
@@ -73,7 +73,7 @@ export default function ConfirmDialog({
           {type === 'alert' ? (
             <button
               onClick={onClose}
-              className="px-5 py-2 bg-white/[0.04] hover:bg-white/[0.08] text-text-secondary font-medium rounded-lg transition cursor-pointer"
+              className="px-5 py-2 bg-brand-primary hover:bg-brand-primary-hover text-on-primary font-medium rounded-lg transition cursor-pointer"
             >
               OK
             </button>
@@ -81,7 +81,7 @@ export default function ConfirmDialog({
             <>
               <button
                 onClick={onClose}
-                className="px-4 py-2 border border-border-default hover:bg-white/[0.04] text-text-secondary font-medium rounded-lg transition cursor-pointer"
+                className="px-4 py-2 border border-border-default hover:bg-white/[0.06] text-text-secondary font-medium rounded-lg transition cursor-pointer"
               >
                 Cancelar
               </button>
@@ -90,9 +90,9 @@ export default function ConfirmDialog({
                   onConfirm?.()
                   onClose()
                 }}
-                className={`px-4 py-2 font-medium rounded-lg transition text-white cursor-pointer ${confirmVariant === 'danger'
-                    ? 'bg-danger hover:bg-danger-hover'
-                    : 'bg-accent hover:bg-accent-hover'
+                className={`px-4 py-2 font-medium rounded-lg transition cursor-pointer ${confirmVariant === 'danger'
+                  ? 'bg-danger hover:bg-danger-hover text-white'
+                  : 'bg-brand-primary hover:bg-brand-primary-hover text-on-primary'
                   }`}
               >
                 {confirmLabel}

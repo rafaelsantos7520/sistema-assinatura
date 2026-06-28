@@ -71,7 +71,7 @@ export default function PhoneInput({
                     onChange={handleChange}
                     placeholder={placeholder}
                     required={required}
-                    className={`w-full ${withIcon ? 'pl-10' : 'px-4'} pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition text-text-primary placeholder-text-muted`}
+                    className={`w-full ${withIcon ? 'pl-10' : 'px-4'} pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary outline-none transition text-text-primary placeholder-text-secondary`}
                 />
             </div>
         </div>

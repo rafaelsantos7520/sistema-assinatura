@@ -29,7 +29,7 @@ export default function DashboardLayout({
             <div className="flex items-center gap-1">
               <Link
                 href="/dashboard/alerts"
-                className="flex items-center gap-2 px-3 py-2 bg-white/[0.04] hover:bg-white/[0.08] text-text-secondary hover:text-text-primary rounded-lg transition relative no-underline"
+                className="flex items-center gap-2 px-3 py-2 bg-white/[0.06] hover:bg-white/[0.10] text-text-secondary hover:text-text-primary rounded-lg transition relative no-underline"
               >
                 <Bell size={20} />
                 <span className="hidden sm:inline text-sm font-medium">Alertas</span>

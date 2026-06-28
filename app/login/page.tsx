@@ -40,9 +40,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex relative overflow-hidden bg-base">
       {/* Left decorative panel */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-surface items-center justify-center p-12">
-        <div className="absolute top-10 left-10 w-64 h-64 bg-accent/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/[0.03] rounded-full blur-2xl" />
+        <div className="absolute top-10 left-10 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-primary/[0.03] rounded-full blur-2xl" />
 
         <div className="relative text-center">
           <div className="mx-auto w-40 h-40 mb-6 flex items-center justify-center rounded-2xl p-4">
@@ -57,7 +57,7 @@ export default function LoginPage() {
           <h2 className="text-3xl font-bold text-text-primary mb-3">
             Seconds Delay Esportivo
           </h2>
-          <p className="text-text-muted text-lg max-w-md mx-auto leading-relaxed">
+          <p className="text-text-secondary text-lg max-w-md mx-auto leading-relaxed">
             Gerencie assinaturas, acompanhe pagamentos e mantenha seus clientes sempre ativos.
           </p>
         </div>
@@ -78,7 +78,7 @@ export default function LoginPage() {
             <h1 className="text-xl font-bold text-text-primary">
               Seconds Delay Esportivo
             </h1>
-            <p className="text-sm text-text-muted mt-1">
+            <p className="text-sm text-text-secondary mt-1">
               Sistema de gerenciamento de assinaturas
             </p>
           </div>
@@ -86,7 +86,7 @@ export default function LoginPage() {
           {/* Desktop title */}
           <div className="hidden lg:block mb-8">
             <h1 className="text-2xl font-bold text-text-primary">Entrar</h1>
-            <p className="text-sm text-text-muted mt-1">
+            <p className="text-sm text-text-secondary mt-1">
               Acesse sua conta para continuar
             </p>
           </div>
@@ -104,7 +104,7 @@ export default function LoginPage() {
                 E-mail
               </label>
               <div className="relative">
-                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
                 <input
                   id="email"
                   type="email"
@@ -112,7 +112,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                  className="w-full pl-10 pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition text-text-primary placeholder-text-muted"
+                  className="w-full pl-10 pr-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary outline-none transition text-text-primary placeholder-text-secondary"
                   placeholder="seu@email.com"
                 />
               </div>
@@ -123,7 +123,7 @@ export default function LoginPage() {
                 Senha
               </label>
               <div className="relative">
-                <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+                <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
@@ -131,13 +131,13 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
-                  className="w-full pl-10 pr-10 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition text-text-primary placeholder-text-muted"
+                  className="w-full pl-10 pr-10 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary outline-none transition text-text-primary placeholder-text-secondary"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-secondary cursor-pointer"
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -148,7 +148,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-accent hover:bg-accent-hover text-white font-semibold py-2.5 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full bg-brand-primary hover:bg-brand-primary-hover text-on-primary font-semibold py-2.5 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -167,7 +167,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="text-xs text-text-muted text-center mt-8">
+          <p className="text-xs text-text-secondary text-center mt-8">
             &copy; {new Date().getFullYear()} Seconds Delay Esportivo. Todos os direitos reservados.
           </p>
         </div>

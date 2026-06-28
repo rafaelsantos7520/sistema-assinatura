@@ -96,7 +96,7 @@ export default function NewSubscriberModal({ isOpen, onClose, onSuccess }: NewSu
           <h3 className="text-lg font-semibold text-text-primary">Novo Assinante</h3>
           <button
             onClick={onClose}
-            className="p-1.5 text-text-muted hover:text-text-primary hover:bg-white/[0.04] rounded-lg transition cursor-pointer"
+            className="p-1.5 text-text-secondary hover:text-text-primary hover:bg-white/[0.06] rounded-lg transition cursor-pointer"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
           </button>
@@ -115,7 +115,7 @@ export default function NewSubscriberModal({ isOpen, onClose, onSuccess }: NewSu
               type="text"
               value={form.full_name}
               onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-              className="w-full px-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition text-text-primary placeholder-text-muted"
+              className="w-full px-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary outline-none transition text-text-primary placeholder-text-secondary"
               placeholder="João da Silva"
             />
           </div>
@@ -126,7 +126,7 @@ export default function NewSubscriberModal({ isOpen, onClose, onSuccess }: NewSu
               type="email"
               value={form.contact_email}
               onChange={(e) => setForm({ ...form, contact_email: e.target.value })}
-              className="w-full px-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-accent focus:border-accent outline-none transition text-text-primary placeholder-text-muted"
+              className="w-full px-4 py-2.5 bg-base border border-border-default rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary outline-none transition text-text-primary placeholder-text-secondary"
               placeholder="joao@email.com"
             />
           </div>
@@ -143,11 +143,11 @@ export default function NewSubscriberModal({ isOpen, onClose, onSuccess }: NewSu
               type="checkbox"
               checked={activeOnCreate}
               onChange={(e) => setActiveOnCreate(e.target.checked)}
-              className="w-4 h-4 accent-accent border-border-default rounded cursor-pointer"
+              className="w-4 h-4 accent-brand-primary border-border-default rounded cursor-pointer"
             />
             <div>
               <span className="text-sm font-medium text-text-primary">Ativar assinatura por 30 dias</span>
-              <p className="text-xs text-text-muted mt-0.5">Cria automaticamente uma assinatura válida por 30 dias</p>
+              <p className="text-xs text-text-secondary mt-0.5">Cria automaticamente uma assinatura válida por 30 dias</p>
             </div>
           </label>
 
@@ -155,14 +155,14 @@ export default function NewSubscriberModal({ isOpen, onClose, onSuccess }: NewSu
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-border-default hover:bg-white/[0.04] text-text-secondary font-medium rounded-lg transition cursor-pointer"
+              className="px-4 py-2 border border-border-default hover:bg-white/[0.06] text-text-secondary font-medium rounded-lg transition cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 bg-accent hover:bg-accent-hover text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
+              className="px-5 py-2 bg-brand-primary hover:bg-brand-primary-hover text-on-primary font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
             >
               <Save size={16} />
               {loading ? 'Salvando...' : 'Cadastrar'}

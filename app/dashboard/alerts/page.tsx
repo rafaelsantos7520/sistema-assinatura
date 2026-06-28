@@ -73,7 +73,7 @@ export default function AlertsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-text-muted">Carregando...</div>
+        <div className="text-text-secondary">Carregando...</div>
       </div>
     )
   }
@@ -82,7 +82,7 @@ export default function AlertsPage() {
     <div className="max-w-7xl mx-auto">
       <Link
         href="/dashboard"
-        className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary mb-6 no-underline"
+        className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary mb-6 no-underline"
       >
         <ArrowLeft size={20} />
         <span className="text-sm font-medium">Voltar</span>
@@ -92,7 +92,7 @@ export default function AlertsPage() {
 
       {alerts.length === 0 ? (
         <div className="bg-surface rounded-xl shadow-sm border border-border-muted py-16 text-center">
-          <Bell size={56} className="mx-auto mb-4 text-text-muted" />
+          <Bell size={56} className="mx-auto mb-4 text-text-secondary" />
           <p className="text-text-secondary font-medium">Nenhuma assinatura vencendo nos próximos 7 dias</p>
         </div>
       ) : (
@@ -132,7 +132,7 @@ export default function AlertsPage() {
 
                 <Link
                   href={`/dashboard/subscribers/${alert.id}`}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent hover:bg-accent-hover text-white font-medium rounded-lg transition text-sm no-underline flex-shrink-0"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-secondary hover:bg-brand-secondary-hover text-white font-medium rounded-lg transition text-sm no-underline flex-shrink-0"
                 >
                   Gerenciar Assinatura
                 </Link>

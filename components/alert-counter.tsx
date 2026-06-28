@@ -52,7 +52,7 @@ export default function AlertCounter() {
   if (loading || count === 0) return null
 
   return (
-    <span className="absolute top-0.5 right-0.5 inline-flex items-center justify-center min-w-[18px] h-[18px] text-[11px] font-bold text-white bg-accent rounded-full px-1">
+    <span className="absolute top-0.5 right-0.5 inline-flex items-center justify-center min-w-[18px] h-[18px] text-[11px] font-bold text-on-primary bg-brand-primary rounded-full px-1">
       {count}
     </span>
   )
